@@ -27,6 +27,13 @@ class S3 extends \DisDev\S3\S3
         $this->objects[$bucketName][] = $keyName;
     }
 
+    public function putFile(string $filePath, string $keyName, string $contentType, string $bucketName = ''): void
+    {
+        parent::putFile($filePath, $keyName, $contentType, $bucketName);
+
+        $this->objects[$bucketName][] = $keyName;
+    }
+
     /**
      * @return array<string, string[]>
      */
