@@ -1,0 +1,25 @@
+{
+    "type": "project",
+    "name": "dis-dev/s3",
+    "description": "Gestion de l'API du S3 d'Amazon pour les projets Publihebdos WEB",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4",
+        "aws/aws-sdk-php": "^3.282"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "@stable",
+        "squizlabs/php_codesniffer": "@stable",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "DisDev\\S3\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    }
+}
