@@ -49,7 +49,7 @@ public function deleteObject(string $keyName, string $bucketName = ''): bool
 
 ## Installation pour le développement
 
-1. Copier [env.example](env.example) vers `.env`
+1. Copier [.env.example](.env.example) vers `.env`
 
 2. Lancer les containers docker (`docker compose up -d`), deux containers vont être lancés :
     - `s3-7.4` en php7.4
