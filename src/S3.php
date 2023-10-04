@@ -127,6 +127,22 @@ class S3
     }
 
     /**
+     * Créé ou remplace un object S3 d'un contenu d'un fichier
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé/n'a pas été put
+     * @throws \RuntimeException Si le fichier n'a pas pu être ouvert
+     */
+    public function putFile(string $filePath, string $keyName, string $contentType, string $bucketName = ''): void
+    {
+        $this->client->putObject([
+            'Bucket'      => $bucketName ?: $this->bucketName,
+            'Key'         => $keyName,
+            'SourceFile'  => $filePath,
+            'ContentType' => $contentType
+        ]);
+    }
+
+    /**
      * Retourne une instance `\Aws\Result` selon la clef et le bucket associés
      *
      * @throws S3Exception Si le bucket et/ou la clef n'existent pas

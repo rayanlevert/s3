@@ -5,6 +5,7 @@ namespace DisDev\S3\Tests;
 use Aws\S3\Exception\S3Exception;
 use DisDev\S3\S3;
 use ReflectionProperty;
+use RuntimeException;
 use UnexpectedValueException;
 
 class S3Test extends TestCase
@@ -329,5 +330,34 @@ class S3Test extends TestCase
         $this->expectException(S3Exception::class);
 
         self::$s3->getObject('key');
+    }
+
+    /**
+     * @test putFile d'un fichier non existant -> exception
+     */
+    public function testPutFileDoesNotExist(): void
+    {
+        self::$s3->createBucket();
+
+        $this->expectException(RuntimeException::class);
+
+        self::$s3->putFile('file.txt', 'key.txt', 'text/plain');
+    }
+
+    /**
+     * @test putFile d'un fichier présent -> OK
+     */
+    public function testPutFileOk(): void
+    {
+        self::$s3->createBucket();
+
+        if (!file_put_contents('/app/data/test.txt', 'ceci est le contenu du fichier.')) {
+            $this->fail('file_put_contents(/app/data/test.txt) returned false');
+        }
+
+        self::$s3->putFile('/app/data/test.txt', 'test.txt', 'text/plain');
+
+        $this->assertTrue(self::$s3->doesObjectExist('test.txt'));
+        $this->assertSame('ceci est le contenu du fichier.', self::$s3->getObjectContent('test.txt'));
     }
 }
