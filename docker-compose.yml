@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  s3-7.4:
+    build: docker/7.4
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - minio
+
+  s3-8.1:
+    build: docker/8.1
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - minio
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9090:9090
+    volumes:
+      - ./docker/data/minio:/data
+    environment:
+      - MINIO_ROOT_USER=root-username
+      - MINIO_ROOT_PASSWORD=root-password
+    command: server --console-address ":9090" /data
