@@ -15,6 +15,11 @@ class S3
     protected \Aws\S3\S3Client $client;
 
     /**
+     * Nom du single bucket pour les instances gérant un seul bucket
+     */
+    protected string $bucketName;
+
+    /**
      * Initialise le client S3 avec les credentials, région et endpoint de l'API depuis un array
      *
      * @param array{key: string, secret: string, endpoint: string, region: string} $array
@@ -27,14 +32,15 @@ class S3
         $secret     = $array['secret'] ?? null;
         $endpoint   = $array['endpoint'] ?? null;
         $region     = $array['region'] ?? null;
+        $bucket     = $array['bucket'] ?? '';
 
-        if (!is_string($key) || !is_string($secret) || !is_string($endpoint) || !is_string($region)) {
+        if (count(array_filter([$key, $secret, $endpoint, $region, $bucket], 'is_string')) !== 5) {
             throw new \UnexpectedValueException(
-                __METHOD__ . ' : key, secret, endpoint and region must be string values'
+                __METHOD__ . ' : key, secret, endpoint, region and optional bucket must be string values'
             );
         }
 
-        return new self($key, $secret, $endpoint, $region);
+        return new self($key, $secret, $endpoint, $region, $bucket);
     }
 
     /**
@@ -49,7 +55,8 @@ class S3
         string $key,
         string $secret,
         string $endpoint,
-        string $region
+        string $region,
+        string $bucketName = ''
     ) {
         $this->client = new \Aws\S3\S3Client([
             'endpoint'                => $endpoint,
@@ -61,6 +68,8 @@ class S3
                 'secret' => $secret
             ]
         ]);
+
+        $this->bucketName = $bucketName;
     }
 
     /**
@@ -68,9 +77,9 @@ class S3
      *
      * @throws S3Exception Si le nom du bucket est mal formé
      */
-    public function doesBucketExist(string $bucketName): bool
+    public function doesBucketExist(string $bucketName = ''): bool
     {
-        return $this->client->doesBucketExist($bucketName);
+        return $this->client->doesBucketExist($bucketName ?: $this->bucketName);
     }
 
     /**
@@ -78,9 +87,9 @@ class S3
      *
      * @throws S3Exception Si le nom du bucket est mal formé
      */
-    public function doesObjectExist(string $bucketName, string $keyName): bool
+    public function doesObjectExist(string $keyName, string $bucketName = ''): bool
     {
-        return $this->client->doesObjectExist($bucketName, $keyName);
+        return $this->client->doesObjectExist($bucketName ?: $this->bucketName, $keyName);
     }
 
     /**
@@ -88,10 +97,10 @@ class S3
      *
      * @throws S3Exception Si le nom du bucket est mal formé
      */
-    public function createBucket(string $bucketName): void
+    public function createBucket(string $bucketName = ''): void
     {
         try {
-            $this->client->createBucket(['Bucket' => $bucketName]);
+            $this->client->createBucket(['Bucket' => $bucketName ?: $this->bucketName]);
         } catch (S3Exception $e) {
             // Si le bucket est déjà créé, ne throw pas l'exception
             if (409 === $e->getStatusCode()) {
@@ -107,10 +116,10 @@ class S3
      *
      * @throws S3Exception Si le nom du bucket est mal formé/n'a pas été put
      */
-    public function putObject(string $content, string $bucketName, string $keyName, string $contentType): void
+    public function putObject(string $content, string $keyName, string $contentType, string $bucketName = ''): void
     {
         $this->client->putObject([
-            'Bucket'      => $bucketName,
+            'Bucket'      => $bucketName ?: $this->bucketName,
             'Key'         => $keyName,
             'Body'        => $content,
             'ContentType' => $contentType
@@ -122,10 +131,10 @@ class S3
      *
      * @throws S3Exception Si le bucket et/ou la clef n'existent pas
      */
-    public function getObject(string $bucketName, string $key): \Aws\Result
+    public function getObject(string $key, string $bucketName = ''): \Aws\Result
     {
         return $this->client->getObject([
-            'Bucket' => $bucketName,
+            'Bucket' => $bucketName ?: $this->bucketName,
             'Key'    => $key
         ]);
     }
@@ -136,9 +145,9 @@ class S3
      * @throws S3Exception Si le bucket et/ou la clef n'existent pas
      * @throws \RuntimeException Si le stream n'a pas pu être lu
      */
-    public function getObjectContent(string $bucketName, string $key): string
+    public function getObjectContent(string $key, string $bucketName = ''): string
     {
-        $oObject = $this->getObject($bucketName, $key);
+        $oObject = $this->getObject($key, $bucketName ?: $this->bucketName);
 
         return $oObject->get('Body')->getContents();
     }
@@ -150,10 +159,10 @@ class S3
      *
      * @return bool true si l'objet existait, false sinon
      */
-    public function deleteBucket(string $bucketName): bool
+    public function deleteBucket(string $bucketName = ''): bool
     {
         try {
-            $this->client->deleteBucket(['Bucket' => $bucketName]);
+            $this->client->deleteBucket(['Bucket' => $bucketName ?: $this->bucketName]);
         } catch (S3Exception $e) {
             // Si le bucket n'existe pas, ne throw pas l'exception
             if (404 === $e->getStatusCode()) {
@@ -173,14 +182,14 @@ class S3
      *
      * @return bool true si l'objet existait, false sinon
      */
-    public function deleteObject(string $bucketName, string $keyName): bool
+    public function deleteObject(string $keyName, string $bucketName = ''): bool
     {
-        if (!$this->doesObjectExist($bucketName, $keyName)) {
+        if (!$this->doesObjectExist($keyName, $bucketName)) {
             return false;
         }
 
         try {
-            $this->client->deleteObject(['Bucket' => $bucketName, 'Key' => $keyName]);
+            $this->client->deleteObject(['Bucket' => $bucketName ?: $this->bucketName, 'Key' => $keyName]);
         } catch (S3Exception $e) {
             // Si le bucket n'existe pas, ne throw pas l'exception
             if (404 === $e->getStatusCode()) {
@@ -191,5 +200,15 @@ class S3
         }
 
         return true;
+    }
+
+    /**
+     * Set un bucketName par défault qui va être utilisé pour chaque méthode
+     */
+    public function setBucketName(string $bucketName): self
+    {
+        $this->bucketName = $bucketName;
+
+        return $this;
     }
 }

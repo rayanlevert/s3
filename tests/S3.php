@@ -13,16 +13,16 @@ class S3 extends \DisDev\S3\S3
      */
     protected array $objects = [];
 
-    public function createBucket(string $bucketName): void
+    public function createBucket(string $bucketName = ''): void
     {
         parent::createBucket($bucketName);
 
         $this->objects[$bucketName] = [];
     }
 
-    public function putObject(string $content, string $bucketName, string $keyName, string $contentType): void
+    public function putObject(string $content, string $keyName, string $contentType, string $bucketName = ''): void
     {
-        parent::putObject($content, $bucketName, $keyName, $contentType);
+        parent::putObject($content, $keyName, $contentType, $bucketName);
 
         $this->objects[$bucketName][] = $keyName;
     }

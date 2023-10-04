@@ -19,7 +19,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET et MINIO_REGION doivent être set depuis .env');
         }
 
-        self::$s3 = new S3($accessKey, $secret, 'http://minio:9000', $region);
+        self::$s3 = new S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
     }
 
     /**
@@ -40,7 +40,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 }
 
                 foreach ($aKeys as $index => $keyName) {
-                    self::$s3->deleteObject($bucketName, $keyName);
+                    self::$s3->deleteObject($keyName, $bucketName);
 
                     if ($index === array_key_last($aKeys)) {
                         self::$s3->deleteBucket($bucketName);
