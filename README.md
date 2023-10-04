@@ -23,7 +23,7 @@ $oS3 = new \DisDev\S3\S3('accessKey', 'secretKey', 'endpoint', 'region', 'bucket
 public function doesBucketExist(string $bucketName = ''): bool;
 
 // Si un object existe par sa clef et bucket
-public function doesObjectExist(string $keyName, string $bucketName): bool;
+public function doesObjectExist(string $keyName, string $bucketName = ''): bool;
 
 // Créé un bucket (si le bucket est déjà créé, ne fait rien et continue le process)
 public function createBucket(string $bucketName = ''): void
