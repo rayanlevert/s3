@@ -26,7 +26,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET et MINIO_REGION doivent être set depuis .env');
         }
 
-        self::$s3 = new S3($accessKey, $secret, 'http://localhost:9000', $region);
+        self::$s3 = new S3($accessKey, $secret, 'http://minio:9000', $region);
     }
 
     /**
@@ -39,6 +39,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         }
 
         foreach ($this->objectsToDelete as $bucketName => $aKeys) {
+            if (!$aKeys) {
+                self::$s3->deleteBucket($bucketName);
+
+                continue;
+            }
+
             foreach ($aKeys as $index => $keyName) {
                 try {
                     self::$s3->deleteObject($bucketName, $keyName);

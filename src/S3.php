@@ -2,6 +2,8 @@
 
 namespace DisDev\S3;
 
+use Aws\S3\Exception\S3Exception;
+
 /**
  * Class permettant la gestion des objets depuis/vers un stockage S3
  */
@@ -50,12 +52,67 @@ class S3
         string $region
     ) {
         $this->client = new \Aws\S3\S3Client([
-            'credentials' => [
+            'endpoint'                => $endpoint,
+            'region'                  => $region,
+            'version'                 => 'latest',
+            'use_path_style_endpoint' => true,
+            'credentials'             => [
                 'key'    => $key,
                 'secret' => $secret
-            ],
-            'endpoint' => $endpoint,
-            'region'   => $region
+            ]
         ]);
+    }
+
+    /**
+     * Retourne un boolean si un bucket exist
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé
+     */
+    public function doesBucketExist(string $bucketName): bool
+    {
+        return $this->client->doesBucketExist($bucketName);
+    }
+
+
+    /**
+     * Créé un bucket (si le bucket est déjà créé, ne fait rien et continue le process)
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé
+     */
+    public function createBucket(string $bucketName): void
+    {
+        try {
+            $this->client->createBucket(['Bucket' => $bucketName]);
+        } catch (S3Exception $e) {
+            // Si le bucket est déjà créé, ne throw pas l'exception
+            if (409 === $e->getStatusCode()) {
+                return;
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Essaie de supprimer un bucket (si le bucket n'existe pas, ne fait rien et continue le process)
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé ou le bucket a des objects encore présents
+     *
+     * @return bool true si l'objet existait, false sinon
+     */
+    public function deleteBucket(string $bucketName): bool
+    {
+        try {
+            $this->client->deleteBucket(['Bucket' => $bucketName]);
+        } catch (S3Exception $e) {
+            // Si le bucket n'existe pas, ne throw pas l'exception
+            if (404 === $e->getStatusCode()) {
+                return false;
+            }
+
+            throw $e;
+        }
+
+        return true;
     }
 }
