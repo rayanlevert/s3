@@ -4,7 +4,7 @@ namespace DisDev\S3\Tests;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected static S3 $s3;
+    protected static \DisDev\S3\S3 $s3;
 
     /**
      * Créé une instance S3 depuis le Minio en dev
@@ -19,7 +19,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET et MINIO_REGION doivent être set depuis .env');
         }
 
-        self::$s3 = new S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
+        self::$s3 = new \DisDev\S3\S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
     }
 
     /**

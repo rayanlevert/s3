@@ -20,6 +20,11 @@ class S3
     protected string $bucketName;
 
     /**
+     * @var array<string, string[]> Objects/buckets créés
+     */
+    protected array $objects = [];
+
+    /**
      * Initialise le client S3 avec les credentials, région et endpoint de l'API depuis un array
      *
      * @param array{key: string, secret: string, endpoint: string, region: string} $array
@@ -109,6 +114,8 @@ class S3
 
             throw $e;
         }
+
+        $this->objects[$bucketName] = [];
     }
 
     /**
@@ -124,6 +131,8 @@ class S3
             'Body'        => $content,
             'ContentType' => $contentType
         ]);
+
+        $this->objects[$bucketName][] = $keyName;
     }
 
     /**
@@ -140,6 +149,8 @@ class S3
             'SourceFile'  => $filePath,
             'ContentType' => $contentType
         ]);
+
+        $this->objects[$bucketName][] = $keyName;
     }
 
     /**
@@ -216,6 +227,14 @@ class S3
         }
 
         return true;
+    }
+
+    /**
+     * @return array<string, string[]> Retourne les buckets/objects créés (bucketName -> array de noms de clef)
+     */
+    public function getObjects(): array
+    {
+        return $this->objects;
     }
 
     /**
