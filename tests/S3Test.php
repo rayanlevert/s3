@@ -222,4 +222,26 @@ class S3Test extends TestCase
 
         $this->assertFalse(self::$s3->deleteObject('test-bucket', 'key2.txt'));
     }
+
+    /**
+     * @test get d'un object où le bucket n'existe pas
+     */
+    public function testGetObjectNoBucket(): void
+    {
+        $this->expectException(S3Exception::class);
+
+        self::$s3->getObject('test-bucket', 'key');
+    }
+
+    /**
+     * @test get d'un object où l'object n'existe pas
+     */
+    public function testGetObjectNoKey(): void
+    {
+        self::$s3->createBucket('test-bucket');
+        
+        $this->expectException(S3Exception::class);
+
+        self::$s3->getObject('test-bucket', 'key');
+    }
 }
