@@ -45,6 +45,9 @@ public function deleteBucket(string $bucketName = ''): bool
 
 // Essaie de supprimer un object (si le bucket n'existe pas, ne fait rien et continue le process)
 public function deleteObject(string $keyName, string $bucketName = ''): bool
+
+// @return array<string, string[]> Retourne les buckets/objects créés (bucketName -> array de noms de clef)
+public function getObjects(): array;
 ```
 
 ## Installation pour le développement
