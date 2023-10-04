@@ -116,7 +116,6 @@ class S3Test extends TestCase
         self::$s3->createBucket('test-bucket');
 
         $this->assertTrue(self::$s3->doesBucketExist('test-bucket'));
-        $this->objectsToDelete['test-bucket'] = [];
     }
 
     /**
@@ -135,9 +134,7 @@ class S3Test extends TestCase
     public function testCreateBucketAlreadyCreated(): void
     {
         self::$s3->createBucket('test-bucket');
-
         $this->assertTrue(self::$s3->doesBucketExist('test-bucket'));
-        $this->objectsToDelete['test-bucket'] = [];
 
         self::$s3->createBucket('test-bucket');
         $this->assertTrue(self::$s3->doesBucketExist('test-bucket'));
@@ -173,5 +170,56 @@ class S3Test extends TestCase
 
         self::$s3->deleteBucket('test-bucket');
         $this->assertFalse(self::$s3->doesBucketExist('test-bucket'));
+    }
+
+    /**
+     * @test ajout d'un object OK
+     */
+    public function testPutObjectOk(): void
+    {
+        self::$s3->createBucket('test-bucket');
+        self::$s3->putObject('test-text', 'test-bucket', 'key.txt', 'text/plain');
+
+        $this->assertTrue(self::$s3->doesBucketExist('test-bucket'));
+        $this->assertTrue(self::$s3->doesObjectExist('test-bucket', 'key.txt'));
+        $this->assertSame('test-text', self::$s3->getObjectContent('test-bucket', 'key.txt'));
+        $this->assertSame('test-text', self::$s3->getObject('test-bucket', 'key.txt')->get('Body')->getContents());
+    }
+
+    /**
+     * @test ajout d'un object sur un bucket n'existant pas
+     */
+    public function testPutObjectNonBucket(): void
+    {
+        $this->expectException(S3Exception::class);
+
+        self::$s3->putObject('test', 'test-bucket', 'keyName.txt', 'text/plain');
+    }
+
+    /**
+     * @test delete d'un object OK
+     */
+    public function testDeleteObjectOk(): void
+    {
+        self::$s3->createBucket('test-bucket');
+        self::$s3->putObject('test-text', 'test-bucket', 'key.txt', 'text/plain');
+
+        $this->assertTrue(self::$s3->doesBucketExist('test-bucket'));
+        $this->assertTrue(self::$s3->doesObjectExist('test-bucket', 'key.txt'));
+
+        $this->assertTrue(self::$s3->deleteObject('test-bucket', 'key.txt'));
+        $this->assertFalse(self::$s3->doesObjectExist('test-bucket', 'key.txt'));
+    }
+
+    /**
+     * @test delete d'un object n'existant pas -> retourne false
+     */
+    public function testDeleteObjectDoesNotExist(): void
+    {
+        $this->assertFalse(self::$s3->deleteObject('test-bucket', 'key.txt'));
+
+        self::$s3->createBucket('test-bucket');
+
+        $this->assertFalse(self::$s3->deleteObject('test-bucket', 'key2.txt'));
     }
 }

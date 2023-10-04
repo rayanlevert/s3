@@ -2,16 +2,9 @@
 
 namespace DisDev\S3\Tests;
 
-use DisDev\S3\S3;
-
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected static \DisDev\S3\S3 $s3;
-
-    /**
-     * @var array<string, string[]> BucketName -> Keys
-     */
-    protected array $objectsToDelete = [];
+    protected static S3 $s3;
 
     /**
      * Créé une instance S3 depuis le Minio en dev
@@ -34,26 +27,26 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function tearDown(): void
     {
-        if (!$this->objectsToDelete) {
+        if (!$aObjects = self::$s3->getObjects()) {
             return;
         }
 
-        foreach ($this->objectsToDelete as $bucketName => $aKeys) {
-            if (!$aKeys) {
-                self::$s3->deleteBucket($bucketName);
+        foreach ($aObjects as $bucketName => $aKeys) {
+            try {
+                if (!$aKeys) {
+                    self::$s3->deleteBucket($bucketName);
 
-                continue;
-            }
+                    continue;
+                }
 
-            foreach ($aKeys as $index => $keyName) {
-                try {
+                foreach ($aKeys as $index => $keyName) {
                     self::$s3->deleteObject($bucketName, $keyName);
 
                     if ($index === array_key_last($aKeys)) {
                         self::$s3->deleteBucket($bucketName);
                     }
-                } catch (\Exception) {
                 }
+            } catch (\Exception) {
             }
         }
     }

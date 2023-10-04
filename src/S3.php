@@ -73,6 +73,15 @@ class S3
         return $this->client->doesBucketExist($bucketName);
     }
 
+    /**
+     * Retourne un boolean si un object (bucket et key) existe
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé
+     */
+    public function doesObjectExist(string $bucketName, string $keyName): bool
+    {
+        return $this->client->doesObjectExist($bucketName, $keyName);
+    }
 
     /**
      * Créé un bucket (si le bucket est déjà créé, ne fait rien et continue le process)
@@ -94,6 +103,47 @@ class S3
     }
 
     /**
+     * Créé ou remplace un object S3 d'un contenu dans un string
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé/n'a pas été put
+     */
+    public function putObject(string $content, string $bucketName, string $keyName, string $contentType): void
+    {
+        $this->client->putObject([
+            'Bucket'      => $bucketName,
+            'Key'         => $keyName,
+            'Body'        => $content,
+            'ContentType' => $contentType
+        ]);
+    }
+
+    /**
+     * Retourne une instance `\Aws\Result` selon la clef et le bucket associés
+     *
+     * @throws S3Exception Si le bucket et/ou la clef n'existent pas
+     */
+    public function getObject(string $bucketName, string $key): \Aws\Result
+    {
+        return $this->client->getObject([
+            'Bucket' => $bucketName,
+            'Key'    => $key
+        ]);
+    }
+
+    /**
+     * Retourne le contenu d'un fichier du S3 selon la clef et le bucket
+     *
+     * @throws S3Exception Si le bucket et/ou la clef n'existent pas
+     * @throws \RuntimeException Si le stream n'a pas pu être lu
+     */
+    public function getObjectContent(string $bucketName, string $key): string
+    {
+        $oObject = $this->getObject($bucketName, $key);
+
+        return $oObject->get('Body')->getContents();
+    }
+
+    /**
      * Essaie de supprimer un bucket (si le bucket n'existe pas, ne fait rien et continue le process)
      *
      * @throws S3Exception Si le nom du bucket est mal formé ou le bucket a des objects encore présents
@@ -104,6 +154,33 @@ class S3
     {
         try {
             $this->client->deleteBucket(['Bucket' => $bucketName]);
+        } catch (S3Exception $e) {
+            // Si le bucket n'existe pas, ne throw pas l'exception
+            if (404 === $e->getStatusCode()) {
+                return false;
+            }
+
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Essaie de supprimer un object (si le bucket n'existe pas, ne fait rien et continue le process)
+     *
+     * @throws S3Exception Si le nom du bucket est mal formé
+     *
+     * @return bool true si l'objet existait, false sinon
+     */
+    public function deleteObject(string $bucketName, string $keyName): bool
+    {
+        if (!$this->doesObjectExist($bucketName, $keyName)) {
+            return false;
+        }
+
+        try {
+            $this->client->deleteObject(['Bucket' => $bucketName, 'Key' => $keyName]);
         } catch (S3Exception $e) {
             // Si le bucket n'existe pas, ne throw pas l'exception
             if (404 === $e->getStatusCode()) {
