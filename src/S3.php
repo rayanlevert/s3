@@ -104,8 +104,10 @@ class S3
      */
     public function createBucket(string $bucketName = ''): void
     {
+        $bucketName ?: $this->bucketName;
+
         try {
-            $this->client->createBucket(['Bucket' => $bucketName ?: $this->bucketName]);
+            $this->client->createBucket(['Bucket' => $bucketName]);
         } catch (S3Exception $e) {
             // Si le bucket est déjà créé, ne throw pas l'exception
             if (409 === $e->getStatusCode()) {
@@ -125,8 +127,10 @@ class S3
      */
     public function putObject(string $content, string $keyName, string $contentType, string $bucketName = ''): void
     {
+        $bucketName ?: $this->bucketName;
+
         $this->client->putObject([
-            'Bucket'      => $bucketName ?: $this->bucketName,
+            'Bucket'      => $bucketName,
             'Key'         => $keyName,
             'Body'        => $content,
             'ContentType' => $contentType
@@ -143,8 +147,10 @@ class S3
      */
     public function putFile(string $filePath, string $keyName, string $contentType, string $bucketName = ''): void
     {
+        $bucketName ?: $this->bucketName;
+
         $this->client->putObject([
-            'Bucket'      => $bucketName ?: $this->bucketName,
+            'Bucket'      => $bucketName,
             'Key'         => $keyName,
             'SourceFile'  => $filePath,
             'ContentType' => $contentType
