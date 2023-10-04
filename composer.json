@@ -2,6 +2,16 @@
     "type": "project",
     "name": "dis-dev/s3",
     "description": "Gestion de l'API du S3 d'Amazon pour les projets Publihebdos WEB",
+    "authors": [
+        {
+            "name": "Rayan Levert",
+            "email": "rayan.levert@group-dis.com"
+        },
+        {
+            "name": "Yann Nave",
+            "email": "yann.nave@group-dis.com"
+        }
+    ],
     "license": "proprietary",
     "require": {
         "php": ">=7.4",
