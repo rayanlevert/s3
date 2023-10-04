@@ -46,7 +46,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                         self::$s3->deleteBucket($bucketName);
                     }
                 }
-            } catch (\Exception) {
+            } catch (\Exception $e) {
             }
         }
     }
