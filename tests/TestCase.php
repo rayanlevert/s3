@@ -4,12 +4,12 @@ namespace DisDev\S3\Tests;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected static \DisDev\S3\S3 $s3;
+    protected \DisDev\S3\S3 $s3;
 
     /**
      * Créé une instance S3 depuis le Minio en dev
      */
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
         $accessKey  = $_ENV['MINIO_ACCESS_KEY'] ?? null;
         $secret     = $_ENV['MINIO_SECRET'] ?? null;
@@ -19,7 +19,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET et MINIO_REGION doivent être set depuis .env');
         }
 
-        self::$s3 = new \DisDev\S3\S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
+        $this->s3 = new \DisDev\S3\S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
     }
 
     /**
@@ -27,23 +27,23 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function tearDown(): void
     {
-        if (!$aObjects = self::$s3->getObjects()) {
+        if (!$aObjects = $this->s3->getObjects()) {
             return;
         }
 
         foreach ($aObjects as $bucketName => $aKeys) {
             try {
                 if (!$aKeys) {
-                    self::$s3->deleteBucket($bucketName);
+                    $this->s3->deleteBucket($bucketName);
 
                     continue;
                 }
 
                 foreach ($aKeys as $index => $keyName) {
-                    self::$s3->deleteObject($keyName, $bucketName);
+                    $this->s3->deleteObject($keyName, $bucketName);
 
                     if ($index === array_key_last($aKeys)) {
-                        self::$s3->deleteBucket($bucketName);
+                        $this->s3->deleteBucket($bucketName);
                     }
                 }
             } catch (\Exception $e) {
