@@ -109,6 +109,18 @@ class S3Test extends TestCase
         S3::fromArray(['secret' => 'secret', 'key' => 'key', 'endpoint' => 'https://endpoint.com']);
     }
 
+    public function testReturnClient(): void
+    {
+        $oS3 = S3::fromArray([
+            'key'       => 'key',
+            'secret'    => 'secret',
+            'endpoint'  => 'https://endpoint.com',
+            'region'    => 'region'
+        ]);
+
+        $this->assertSame('Aws\S3\S3Client', $oS3->getClient()::class, 'Class Aws\S3\S3Client ok');
+    }
+
     /**
      * @test création d'un bucket -> doesBucketExist à true
      */
