@@ -351,11 +351,7 @@ class S3Test extends TestCase
     {
         $this->s3->createBucket();
 
-        if (!file_put_contents('/app/data/test.txt', 'ceci est le contenu du fichier.')) {
-            $this->fail('file_put_contents(/app/data/test.txt) returned false');
-        }
-
-        $this->s3->putFile('/app/data/test.txt', 'test.txt', 'text/plain');
+        $this->s3->putFile('/app/tests/fixtures/test.txt', 'test.txt', 'text/plain');
 
         $this->assertTrue($this->s3->doesObjectExist('test.txt'));
         $this->assertSame('ceci est le contenu du fichier.', $this->s3->getObjectContent('test.txt'));
