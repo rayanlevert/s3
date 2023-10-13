@@ -78,6 +78,14 @@ class S3
     }
 
     /**
+     * Retourne le S3Client Aws
+     */
+    public function getClient(): \Aws\S3\S3Client
+    {
+        return $this->client;
+    }
+
+    /**
      * Retourne un boolean si un bucket exist
      *
      * @throws S3Exception Si le nom du bucket est mal formé
