@@ -160,6 +160,23 @@ class S3
     }
 
     /**
+     * Ajout le contenu d'un dossier récursivement
+     *
+     * @param string $directoryPrefix String à préfixé à chaque clef (sous fichiers)
+     *
+     * @throws \UnexpectedValueException Si le dossier n'est pas readable
+     * @throws S3Exception Si le nom du bucket est mal formé/n'a pas été put
+     */
+    public function putDirectory(string $directoryPath, string $directoryPrefix = null, string $bucketName = ''): void
+    {
+        if (!is_dir($directoryPath) || !is_readable($directoryPath)) {
+            throw new \UnexpectedValueException($directoryPath . ' is not readable');
+        }
+
+        $this->client->uploadDirectory($directoryPath, $bucketName ?: $this->bucketName, $directoryPrefix);
+    }
+
+    /**
      * Retourne une instance `\Aws\Result` selon la clef et le bucket associés
      *
      * @throws S3Exception Si le bucket et/ou la clef n'existent pas
@@ -233,6 +250,14 @@ class S3
         }
 
         return true;
+    }
+
+    /**
+     * Ajoute une clef dans l'array `objects`
+     */
+    public function addObjectKey(string $bucketName, string $keyName): void
+    {
+        $this->objects[$bucketName][] = $keyName;
     }
 
     /**

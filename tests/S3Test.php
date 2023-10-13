@@ -390,4 +390,69 @@ class S3Test extends TestCase
         $this->s3->putObject('text', 'keyname2.txt', 'text/plain');
         $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->getObjects());
     }
+
+    /**
+     * @test ::putDirectory() d'un dossier non existant
+     */
+    public function testPutDirectoryNotDirectory(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('/not/a/directory is not readable');
+
+        $this->s3->putDirectory('/not/a/directory');
+    }
+
+    /**
+     * @test ::putDirectory d'un dossier avec un fichier
+     */
+    public function testPutDirectoryOneFile(): void
+    {
+        $this->s3->createBucket();
+
+        $this->s3->putDirectory('/app/tests/fixtures/directory');
+        $this->assertTrue($this->s3->doesObjectExist('test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'test.txt');
+
+        $this->s3->putDirectory('/app/tests/fixtures/directory', 'directory');
+        $this->assertTrue($this->s3->doesObjectExist('directory/test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directory/test.txt');
+    }
+
+    /**
+     * @test ::putDirectory de plusieurs dossiers
+     */
+    public function testPutDirectoryMultipleDirectoriesPrefix(): void
+    {
+        $this->s3->createBucket();
+
+        $this->s3->putDirectory('/app/tests/fixtures/directories', 'directories');
+
+        $this->assertTrue($this->s3->doesObjectExist('directories/test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directories/test.txt');
+
+        $this->assertTrue($this->s3->doesObjectExist('directories/directory1/test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directories/directory1/test.txt');
+
+        $this->assertTrue($this->s3->doesObjectExist('directories/directory2/test2.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directories/directory2/test2.txt');
+    }
+
+    /**
+     * @test ::putDirectory de plusieurs dossiers sans préfix
+     */
+    public function testPutDirectoryMultipleDirectoriesNoPrefix(): void
+    {
+        $this->s3->createBucket();
+
+        $this->s3->putDirectory('/app/tests/fixtures/directories');
+
+        $this->assertTrue($this->s3->doesObjectExist('test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'test.txt');
+
+        $this->assertTrue($this->s3->doesObjectExist('directory1/test.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directory1/test.txt');
+
+        $this->assertTrue($this->s3->doesObjectExist('directory2/test2.txt'));
+        $this->s3->addObjectKey('test-bucket', 'directory2/test2.txt');
+    }
 }
