@@ -64,10 +64,11 @@ class S3
         string $bucketName = ''
     ) {
         $this->client = new \Aws\S3\S3Client([
-            'endpoint'                => $endpoint,
-            'region'                  => $region,
-            'version'                 => 'latest',
-            'use_path_style_endpoint' => true,
+            'endpoint'                    => $endpoint,
+            'region'                      => $region,
+            'version'                     => 'latest',
+            'use_path_style_endpoint'     => true,
+            'use_aws_shared_config_files' => false,
             'credentials'             => [
                 'key'    => $key,
                 'secret' => $secret
