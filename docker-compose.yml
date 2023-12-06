@@ -1,25 +1,26 @@
 version: '3'
 
 services:
-  s3-7.4:
-    build: docker/7.4
-    working_dir: /app
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    depends_on:
-      - minio
-
   s3-8.1:
     build: docker/8.1
+    restart: 'no'
     working_dir: /app
     volumes:
       - .:/app
-    env_file:
-      - .env
-    depends_on:
-      - minio
+
+  s3-8.2:
+    build: docker/8.2
+    restart: 'no'
+    working_dir: /app
+    volumes:
+      - .:/app
+
+  s3-8.3:
+    build: docker/8.3
+    restart: 'no'
+    working_dir: /app
+    volumes:
+      - .:/app
 
   minio:
     image: minio/minio
