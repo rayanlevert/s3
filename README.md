@@ -9,10 +9,10 @@ Requiert PHP >=7.4
 ### Initialisation
 ```php
 // Initialise le Client S3 avec les credentials, l'endpoint de base et la région du server AWS
-$oS3 = new \DisDev\S3\S3('accessKey', 'secretKey', 'endpoint', 'region');
+$oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region');
 
 // Un 5ème argument qui est le nom du bucket si l'instance comporte un seul bucket, à ne pas réutiliser à chaque appel de méthode ;)
-$oS3 = new \DisDev\S3\S3('accessKey', 'secretKey', 'endpoint', 'region', 'bucketName');
+$oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region', 'bucketName');
 ```
 
 ## Méthodes API

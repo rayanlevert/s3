@@ -1,9 +1,9 @@
 <?php
 
-namespace DisDev\S3\Tests;
+namespace RayanLevert\S3\Tests;
 
 use Aws\S3\Exception\S3Exception;
-use DisDev\S3\S3;
+use RayanLevert\S3\S3;
 use ReflectionProperty;
 use RuntimeException;
 use UnexpectedValueException;
