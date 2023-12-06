@@ -5,6 +5,8 @@ services:
     build: docker/8.1
     restart: 'no'
     working_dir: /app
+    env_file:
+      - .env
     volumes:
       - .:/app
 
@@ -12,6 +14,8 @@ services:
     build: docker/8.2
     restart: 'no'
     working_dir: /app
+    env_file:
+      - .env
     volumes:
       - .:/app
 
@@ -19,6 +23,8 @@ services:
     build: docker/8.3
     restart: 'no'
     working_dir: /app
+    env_file:
+      - .env
     volumes:
       - .:/app
 
