@@ -1,27 +1,38 @@
 {
-    "type": "project",
-    "name": "dis-dev/s3",
-    "description": "Gestion de l'API du S3 d'Amazon pour les projets Publihebdos WEB",
+    "name": "rayanlevert/s3",
+    "description": "Simpler with typed methods wrapper over the S3 SDK from AWS for handling buckets",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "php",
+        "s3",
+        "wrapper"
+    ],
+    "support": {
+        "issues": "https://github.com/rayanlevert/s3/issues"
+    },
     "authors": [
         {
             "name": "Rayan Levert",
-            "email": "rayan.levert@group-dis.com"
+            "email": "rayanlevert@msn.com"
         },
         {
             "name": "Yann Nave",
             "email": "yann.nave@group-dis.com"
         }
     ],
-    "license": "proprietary",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "ext-curl": "*",
-        "aws/aws-sdk-php": "^3.282"
+        "aws/aws-sdk-php": "^3.293"
     },
     "require-dev": {
         "phpmd/phpmd": "@stable",
         "squizlabs/php_codesniffer": "@stable",
         "phpunit/phpunit": "^10.0"
+    },
+    "config": {
+        "optimize-autoloader": true
     },
     "autoload": {
         "psr-4": {
