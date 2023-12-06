@@ -1,6 +1,6 @@
 <?php
 
-namespace DisDev\S3;
+namespace RayanLevert\S3;
 
 use Aws\S3\Exception\S3Exception;
 

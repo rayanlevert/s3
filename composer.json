@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DisDev\\S3\\": "src"
+            "RayanLevert\\S3\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DisDev\\S3\\Tests\\": "tests"
+            "RayanLevert\\S3\\Tests\\": "tests"
         }
     }
 }
