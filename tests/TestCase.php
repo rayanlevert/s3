@@ -7,7 +7,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected \RayanLevert\S3\S3 $s3;
 
     /**
-     * Créé une instance S3 depuis le Minio en dev
+     * Creates a S3 instance from .env
      */
     protected function setUp(): void
     {
@@ -15,15 +15,15 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $secret     = $_ENV['MINIO_SECRET'] ?? null;
         $region     = $_ENV['MINIO_REGION'] ?? null;
 
-        if (!is_string($accessKey) || !is_string($secret) || !is_string($region)) {
-            throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET et MINIO_REGION doivent être set depuis .env');
+        if (!$accessKey || !$secret || !$region) {
+            throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET and MINIO_REGION must be set from .env');
         }
 
         $this->s3 = new \RayanLevert\S3\S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
     }
 
     /**
-     * Delete les objets et les buckets créés après chaque test
+     * Deletes creates objects and/or buckets from tests after each test
      */
     protected function tearDown(): void
     {

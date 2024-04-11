@@ -99,7 +99,7 @@ class S3
     }
 
     /**
-     * Retourne un boolean si un object (bucket et key) existe
+     * Checks if an object exists
      *
      * @throws S3Exception If the bucket name is incorrect
      */
