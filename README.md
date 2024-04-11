@@ -1,69 +1,74 @@
-# Class servant de librairie des calls API au S3 d'Amazon pour la gestion des buckets et keys
+# Amazon's SDK typed and documented wrapper class handling S3 object storages
 
-> Utilisation en local de [MinIO](https://min.io/docs/minio/linux/index.html) qui est l'Open Source du S3
+## How to use the class
 
-Requiert PHP >=7.4
-
-## Utilisation de la librairie
-
-### Initialisation
+### Construct
 ```php
-// Initialise le Client S3 avec les credentials, l'endpoint de base et la région du server AWS
+// Initializes the client with credentials, endpoint to the API and server location
 $oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region');
 
-// Un 5ème argument qui est le nom du bucket si l'instance comporte un seul bucket, à ne pas réutiliser à chaque appel de méthode ;)
+// A 5th argument can be passed if you are going to use the same bucket from the instance, don't need to pass the bucket name to each method ;)
 $oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region', 'bucketName');
+
+// If you prefer to have all infos in an associative array, ::fromArray() is available
+$oS3 = \RayanLevert\S3\S3::fromArray([
+    'key'      => 'accessKey',
+    'secret'   => 'secretKey',
+    'endpoint' => 'endpoint-url',
+    'region'   => 'region-dev',
+    'bucket'   => 'bucketName' // optional if multiple buckets will be used
+]);
 ```
 
-## Méthodes API
-> L'argument `$bucketName` n'est pas obligatoire si `$bucketName` a été renseigné dans le constructeur
+## API methods
+> Argument `$bucketName` is not mandatory if `$bucketName` has been passed to the constructor
 
 ```php
-// Si un bucket existe
+// If a bucket exists
 public function doesBucketExist(string $bucketName = ''): bool;
 
-// Si un object existe par sa clef et bucket
+// If an object exists by its bucket and key name
 public function doesObjectExist(string $keyName, string $bucketName = ''): bool;
 
-// Créé un bucket (si le bucket est déjà créé, ne fait rien et continue le process)
+// Creates a bucket
 public function createBucket(string $bucketName = ''): void
 
-// Créé ou remplace un object S3 d'un contenu dans un string
+// Creates an object from a string
 public function putObject(string $content, string $keyName, string $contentType, string $bucketName = ''): void
 
-// Créé ou remplace un object S3 d'un contenu d'un fichier
+// Creates a object from a local file
 public function putFile(string $filePath, string $keyName, string $contentType, string $bucketName = ''): void
 
-// Retourne une instance `\Aws\Result` selon la clef et le bucket associés
+// Returns an `\Aws\Result` instance from a key (throws an exception if not found)
 public function getObject(string $key, string $bucketName = ''): \Aws\Result
 
-// Retourne le contenu d'un fichier du S3 selon la clef et le bucket
+// Returns the content of an object (throws an exception if not found)
 public function getObjectContent(string $key, string $bucketName = ''): string
 
-// Essaie de supprimer un bucket (si le bucket n'existe pas, ne fait rien et continue le process)
+// Deletes a bucket (throws an exception if still objects remain in the bucket)
 public function deleteBucket(string $bucketName = ''): bool
 
-// Essaie de supprimer un object (si le bucket n'existe pas, ne fait rien et continue le process)
+// Deletes an object (continues and returns false if the object didn't exist, true if it did)
 public function deleteObject(string $keyName, string $bucketName = ''): bool
 
-// @return array<string, string[]> Retourne les buckets/objects créés (bucketName -> array de noms de clef)
+// @return array<string, string[]> Returns buckets and/or objects created from the instance (bucketName -> array of key names)
 public function getObjects(): array;
 ```
 
-## Installation pour le développement
+## Development / Docker
 
-1. Copier [.env.example](.env.example) vers `.env`
+> Uses [MinIO](https://min.io/docs/minio/linux/index.html), open source object storage for local development (unit tests)
 
-2. Lancer les containers docker (`docker compose up -d`), deux containers vont être lancés :
-    - `s3-7.4` en php7.4
-    - `s3-8.1` en php8.1
+1. Copy [.env.example](.env.example) to `.env`
 
-3. Lancer `docker compose exec s3-7.4|s3-8.1 bash` pour accéder au PHP.
+2. Start containers (`docker compose up -d`), which you can choose the PHP version, and one for MinIO
 
-4. Aller sur `http://localhost:9090` et se connecter avec le user/password dans le [docker-compose.yml](docker-compose.yml)
+3. Start `docker compose exec s3-8.x bash` to access to the PHP
 
-5. Aller dans `Access Keys`, générer les clefs et les mettre dans le `.env`
+4. Go to `http://localhost:9090` and connect by using username and password in [docker-compose.yml](docker-compose.yml) file
 
-6. Aller dans `Settings` et mettez une valeur dans `Server Location` (`local-dev` par ex.) puis dans le `.env`
+5. Go to  `Access Keys`, generate access and secret key and put them in `.env` file
 
-7. Relancer les containers pour mettre à jour le `.env` et vous êtes go to go !
+6. Go to `Settings` and set a value in `Server Location` (`local-dev` for example) and in the `.env` file
+
+7. Restart containers upadting  `.env` file and you are good to go !

@@ -5,7 +5,7 @@ namespace RayanLevert\S3;
 use Aws\S3\Exception\S3Exception;
 
 /**
- * Amazon's SDK typed and documented wrapper class handling S3 objects storages
+ * Amazon's SDK typed and documented wrapper class handling S3 object storages
  */
 class S3
 {
