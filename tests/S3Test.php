@@ -3,10 +3,10 @@
 namespace RayanLevert\S3\Tests;
 
 use Aws\S3\Exception\S3Exception;
+use RayanLevert\S3\Exception;
 use RayanLevert\S3\S3;
 use ReflectionProperty;
 use RuntimeException;
-use UnexpectedValueException;
 
 class S3Test extends TestCase
 {
@@ -64,7 +64,7 @@ class S3Test extends TestCase
      */
     public function testFromArrayEmptyArray(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
 
         S3::fromArray([]);
     }
@@ -74,7 +74,7 @@ class S3Test extends TestCase
      */
     public function testFromArrayNotKey(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
 
         S3::fromArray(['secret' => 'secret', 'endpoint' => 'https://endpoint.com', 'region' => 'region']);
     }
@@ -84,7 +84,7 @@ class S3Test extends TestCase
      */
     public function testFromArrayNotSecret(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
 
         S3::fromArray(['key' => 'key', 'endpoint' => 'https://endpoint.com', 'region' => 'region']);
     }
@@ -94,7 +94,7 @@ class S3Test extends TestCase
      */
     public function testFromArrayNotEndpoint(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
 
         S3::fromArray(['key' => 'key', 'secret' => 'secret', 'region' => 'region']);
     }
@@ -104,7 +104,7 @@ class S3Test extends TestCase
      */
     public function testFromArrayNotRegion(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
 
         S3::fromArray(['secret' => 'secret', 'key' => 'key', 'endpoint' => 'https://endpoint.com']);
     }
@@ -408,7 +408,7 @@ class S3Test extends TestCase
      */
     public function testPutDirectoryNotDirectory(): void
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('/not/a/directory is not readable');
 
         $this->s3->putDirectory('/not/a/directory');

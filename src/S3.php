@@ -181,7 +181,7 @@ class S3
     public function putDirectory(string $directoryPath, string $directoryPrefix = null, string $bucketName = ''): void
     {
         if (!is_dir($directoryPath) || !is_readable($directoryPath)) {
-            throw new \UnexpectedValueException("$directoryPath is not readable");
+            throw new Exception("$directoryPath is not readable");
         }
 
         $this->client->uploadDirectory($directoryPath, $bucketName ?: $this->bucketName, $directoryPrefix);
