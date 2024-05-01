@@ -7,7 +7,10 @@
 // Initializes the client with credentials, endpoint to the API and server location
 $oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region');
 
-// A 5th argument can be passed if you are going to use the same bucket from the instance, don't need to pass the bucket name to each method ;)
+/**
+ * A 5th argument can be passed if you are going to use the same bucket from the instance 
+ * you don't need to pass the bucket name to each method ;)
+*/
 $oS3 = new \RayanLevert\S3\S3('accessKey', 'secretKey', 'endpoint', 'region', 'bucketName');
 
 // If you prefer to have all infos in an associative array, ::fromArray() is available
