@@ -1,28 +1,10 @@
-version: '3'
-
 services:
-  s3-8.1:
-    build: docker/8.1
-    restart: 'no'
-    working_dir: /app
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-
-  s3-8.2:
-    build: docker/8.2
-    restart: 'no'
-    working_dir: /app
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-
-  s3-8.3:
+  s3:
     build: docker/8.3
     restart: 'no'
     working_dir: /app
+    tty: true
+    stdin_open: true
     env_file:
       - .env
     volumes:
