@@ -15,10 +15,6 @@
         {
             "name": "Rayan Levert",
             "email": "rayanlevert@msn.com"
-        },
-        {
-            "name": "Yann Nave",
-            "email": "yann.nave@group-dis.com"
         }
     ],
     "require": {
@@ -37,7 +33,10 @@
     "autoload": {
         "psr-4": {
             "RayanLevert\\S3\\": "src"
-        }
+        },
+        "exclude-from-classmap": [
+            "tests"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
