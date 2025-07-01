@@ -4,6 +4,11 @@ namespace RayanLevert\S3;
 
 use Aws\S3\Exception\S3Exception;
 
+use function count;
+use function array_filter;
+use function is_dir;
+use function is_readable;
+
 /**
  * Amazon's SDK typed and documented wrapper class handling S3 object storages
  */
@@ -172,7 +177,7 @@ class S3
      * @throws Exception If the directory is not readable
      * @throws S3Exception If the bucket name is incorrect/n'a pas été put
      */
-    public function putDirectory(string $directoryPath, string $directoryPrefix = null, string $bucketName = ''): void
+    public function putDirectory(string $directoryPath, ?string $directoryPrefix = null, string $bucketName = ''): void
     {
         if (!is_dir($directoryPath) || !is_readable($directoryPath)) {
             throw new Exception("$directoryPath is not readable");
