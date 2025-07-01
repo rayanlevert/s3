@@ -66,12 +66,14 @@ public function getObjects(): array;
 
 2. Start containers (`docker compose up -d`), which you can choose the PHP version, and one for MinIO
 
-3. Start `docker compose exec s3-8.x bash` to access to the PHP
+3. Start `docker compose exec s3 bash` to access to the PHP
 
-4. Go to `http://localhost:9090` and connect by using username and password in [docker-compose.yml](docker-compose.yml) file
+4. Run `composer install` to retrieve **vendors**
 
-5. Go to  `Access Keys`, generate access and secret key and put them in `.env` file
+5. Go to http://localhost:9090 and connect by using username and password in [docker-compose.yml](docker-compose.yml) file
 
-6. Go to `Settings` and set a value in `Server Location` (`local-dev` for example) and in the `.env` file
+6. Go to  `Access Keys`, generate access and secret key and put them in `.env` file
 
-7. Restart containers upadting  `.env` file and you are good to go !
+7. Go to `Configuration` and set a value in `Server Location` (`local-dev` for example) and in the `.env` file
+
+8. Restart containers updating  `.env` file and you are good to go !
