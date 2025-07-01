@@ -9,19 +9,13 @@ use function array_filter;
 use function is_dir;
 use function is_readable;
 
-/**
- * Amazon's SDK typed and documented wrapper class handling S3 object storages
- */
+/** Amazon's SDK typed and documented wrapper class handling S3 object storages */
 class S3
 {
-    /**
-     * Guzzle client handled by Amazon's SDK
-     */
+    /** Guzzle client handled by Amazon's SDK */
     protected \Aws\S3\S3Client $client;
 
-    /**
-     * @var array<string, string[]> Buckets and objects created
-     */
+    /** @var array<string, string[]> Buckets and objects created */
     protected array $objects = [];
 
     /**
@@ -79,9 +73,7 @@ class S3
         ]);
     }
 
-    /**
-     * Returns Amazon's Guzzle Client
-     */
+    /** Returns Amazon's Guzzle Client */
     public function getClient(): \Aws\S3\S3Client
     {
         return $this->client;
@@ -262,9 +254,7 @@ class S3
         return true;
     }
 
-    /**
-     * Adds a key in the internal array
-     */
+    /** Adds a key in the internal array */
     public function addObjectKey(string $bucketName, string $keyName): void
     {
         $this->objects[$bucketName][] = $keyName;
@@ -279,9 +269,7 @@ class S3
         return $this->objects;
     }
 
-    /**
-     * Sets a bucket name by default which will be used by each method
-     */
+    /** Sets a bucket name by default which will be used by each method */
     public function setBucketName(string $bucketName): self
     {
         $this->bucketName = $bucketName;
