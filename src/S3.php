@@ -156,7 +156,7 @@ class S3
     }
 
     /**
-     * Adds recursively ²all files from a directory to a bucket
+     * Adds recursively all files from a directory to a bucket
      *
      * @param string $directoryPrefix Virtual directory key prefix to add to each upload
      *
@@ -174,7 +174,7 @@ class S3
 
     /**
      * Returns an `\Aws\Result` instance from a bucket and object key
-     *h
+     *
      * @throws S3Exception If the bucket or object key doesn't exist
      */
     public function getObject(string $key, string $bucketName = ''): \Aws\Result
