@@ -25,7 +25,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /** Deletes creates objects and/or buckets from tests after each test */
     protected function tearDown(): void
     {
-        if (!$aObjects = $this->s3->getObjects()) {
+        if (!$aObjects = $this->s3->objects) {
             return;
         }
 

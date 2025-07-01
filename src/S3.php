@@ -15,8 +15,8 @@ class S3
     /** Guzzle client handled by Amazon's SDK */
     public readonly \Aws\S3\S3Client $client;
 
-    /** @var array<string, string[]> Buckets and objects created */
-    protected array $objects = [];
+    /** @var array<string, string[]> Buckets and objects created (bucket name -> name of keys) */
+    public protected(set) array $objects = [];
 
     /**
      * Initializes S3 client with credentials, region and endpoint from an associative array
@@ -57,7 +57,7 @@ class S3
         string $secret,
         string $endpoint,
         string $region,
-        protected string $bucketName = '',
+        public string $bucketName = '',
         bool|array $useAwsSharedConfigFiles = false
     ) {
         $this->client = new \Aws\S3\S3Client([
@@ -252,22 +252,5 @@ class S3
     public function addObjectKey(string $bucketName, string $keyName): void
     {
         $this->objects[$bucketName][] = $keyName;
-    }
-
-    /**
-     * @return array<string, string[]> Returns all buckets and objects created from the instance
-     * (bucketName -> name of keys)
-     */
-    public function getObjects(): array
-    {
-        return $this->objects;
-    }
-
-    /** Sets a bucket name by default which will be used by each method */
-    public function setBucketName(string $bucketName): self
-    {
-        $this->bucketName = $bucketName;
-
-        return $this;
     }
 }

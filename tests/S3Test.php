@@ -344,32 +344,33 @@ class S3Test extends TestCase
     #[TestDox('::getObjects()')]
     public function getObjects(): void
     {
-        $this->assertSame([], $this->s3->getObjects());
+        $this->assertSame([], $this->s3->objects);
 
         $this->s3->createBucket('test-bucket');
-        $this->assertSame(['test-bucket' => []], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => []], $this->s3->objects);
 
         $this->s3->putObject('text', 'keyname.txt', 'text/plain', 'test-bucket');
-        $this->assertSame(['test-bucket' => ['keyname.txt']], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => ['keyname.txt']], $this->s3->objects);
 
         $this->s3->putObject('text', 'keyname2.txt', 'text/plain', 'test-bucket');
-        $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->objects);
     }
 
     #[Test]
     #[TestDox('::getObjects() with default bucket name')]
     public function getObjectsDefault(): void
     {
-        $this->assertSame([], $this->s3->setBucketName('test-bucket')->getObjects());
+        $this->s3->bucketName = 'test-bucket';
+        $this->assertSame([], $this->s3->objects);
 
         $this->s3->createBucket();
-        $this->assertSame(['test-bucket' => []], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => []], $this->s3->objects);
 
         $this->s3->putObject('text', 'keyname.txt', 'text/plain');
-        $this->assertSame(['test-bucket' => ['keyname.txt']], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => ['keyname.txt']], $this->s3->objects);
 
         $this->s3->putObject('text', 'keyname2.txt', 'text/plain');
-        $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->getObjects());
+        $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->objects);
     }
 
     #[Test]
