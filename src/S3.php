@@ -13,7 +13,7 @@ use function is_readable;
 class S3
 {
     /** Guzzle client handled by Amazon's SDK */
-    protected \Aws\S3\S3Client $client;
+    public readonly \Aws\S3\S3Client $client;
 
     /** @var array<string, string[]> Buckets and objects created */
     protected array $objects = [];
@@ -71,12 +71,6 @@ class S3
                 'secret' => $secret
             ]
         ]);
-    }
-
-    /** Returns Amazon's Guzzle Client */
-    public function getClient(): \Aws\S3\S3Client
-    {
-        return $this->client;
     }
 
     /**

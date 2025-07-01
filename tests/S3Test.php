@@ -118,7 +118,7 @@ class S3Test extends TestCase
             'region'    => 'region'
         ]);
 
-        $this->assertSame('Aws\S3\S3Client', $oS3->getClient()::class, 'Class Aws\S3\S3Client ok');
+        $this->assertSame('Aws\S3\S3Client', $oS3->client::class, 'Class Aws\S3\S3Client ok');
     }
 
     /**
