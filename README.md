@@ -1,5 +1,10 @@
 # Amazon's SDK typed and documented wrapper class handling S3 object storages
 
+[![Packagist Version](https://img.shields.io/packagist/v/rayanlevert/s3)](https://packagist.org/packages/rayanlevert/s3)
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/rayanlevert/s3)](https://packagist.org/packages/rayanlevert/s3)
+
+> Version **3.0** supports only **php8.4** with all brand new features, for >= **php8.1**, version **2.0** is still supported.
+
 ## How to use the class
 
 ### Construct
