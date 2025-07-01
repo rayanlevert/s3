@@ -3,17 +3,16 @@
 namespace RayanLevert\S3\Tests;
 
 use Aws\S3\Exception\S3Exception;
-use RayanLevert\S3\Exception;
-use RayanLevert\S3\S3;
+use PHPUnit\Framework\Attributes\{Test, TestDox};
+use RayanLevert\S3\{Exception, S3};
 use ReflectionProperty;
 use RuntimeException;
 
 class S3Test extends TestCase
 {
-    /**
-     * @test __construct
-     */
-    public function testConstruct(): void
+    #[Test]
+    #[TestDox('__construct')]
+    public function construct(): void
     {
         $oS3 = new S3('key', 'secret', 'https://endpoint.com', 'region');
 
@@ -32,10 +31,9 @@ class S3Test extends TestCase
         $this->assertSame('region', $oS3Client->getRegion());
     }
 
-    /**
-     * @test ::fromArray()
-     */
-    public function testFromArray(): void
+    #[Test]
+    #[TestDox('::fromArray()')]
+    public function fromArray(): void
     {
         $oS3 = S3::fromArray([
             'key'       => 'key',
@@ -59,57 +57,52 @@ class S3Test extends TestCase
         $this->assertSame('region', $oS3Client->getRegion());
     }
 
-    /**
-     * @test ::fromArray() empty array
-     */
-    public function testFromArrayEmptyArray(): void
+    #[Test]
+    #[TestDox('::fromArray() empty array')]
+    public function fromArrayEmptyArray(): void
     {
         $this->expectException(Exception::class);
 
         S3::fromArray([]);
     }
 
-    /**
-     * @test ::fromArray() not key entry
-     */
-    public function testFromArrayNotKey(): void
+    #[Test]
+    #[TestDox('::fromArray() not key entry')]
+    public function fromArrayNotKey(): void
     {
         $this->expectException(Exception::class);
 
         S3::fromArray(['secret' => 'secret', 'endpoint' => 'https://endpoint.com', 'region' => 'region']);
     }
 
-    /**
-     * @test ::fromArray() not secret entry
-     */
-    public function testFromArrayNotSecret(): void
+    #[Test]
+    #[TestDox('::fromArray() not secret entry')]
+    public function fromArrayNotSecret(): void
     {
         $this->expectException(Exception::class);
 
         S3::fromArray(['key' => 'key', 'endpoint' => 'https://endpoint.com', 'region' => 'region']);
     }
 
-    /**
-     * @test ::fromArray() not endpoint
-     */
-    public function testFromArrayNotEndpoint(): void
+    #[Test]
+    #[TestDox('::fromArray() not endpoint')]
+    public function fromArrayNotEndpoint(): void
     {
         $this->expectException(Exception::class);
 
         S3::fromArray(['key' => 'key', 'secret' => 'secret', 'region' => 'region']);
     }
 
-    /**
-     * @test ::fromArray() not region
-     */
-    public function testFromArrayNotRegion(): void
+    #[Test]
+    #[TestDox('::fromArray() not region')]
+    public function fromArrayNotRegion(): void
     {
         $this->expectException(Exception::class);
 
         S3::fromArray(['secret' => 'secret', 'key' => 'key', 'endpoint' => 'https://endpoint.com']);
     }
 
-    public function testReturnClient(): void
+    public function returnClient(): void
     {
         $oS3 = S3::fromArray([
             'key'       => 'key',
@@ -121,30 +114,27 @@ class S3Test extends TestCase
         $this->assertSame('Aws\S3\S3Client', $oS3->client::class, 'Class Aws\S3\S3Client ok');
     }
 
-    /**
-     * @test création d'un bucket -> doesBucketExist à true
-     */
-    public function testCreateBucketTrue(): void
+    #[Test]
+    #[TestDox('Creating a bucket sets doesBucketExist to true')]
+    public function createBucketTrue(): void
     {
         $this->s3->createBucket('test-bucket');
 
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
     }
 
-    /**
-     * @test création d'un bucket d'un mauvais nom -> S3Exception
-     */
-    public function testCreateBucketWrongName(): void
+    #[Test]
+    #[TestDox('Creating a bucket with wrong name throws S3Exception')]
+    public function createBucketWrongName(): void
     {
         $this->expectException(S3Exception::class);
 
         $this->s3->createBucket('wr°ng-buck€t');
     }
 
-    /**
-     * @test création d'un bucket déjà créé -> ne fait rien
-     */
-    public function testCreateBucketAlreadyCreated(): void
+    #[Test]
+    #[TestDox('Creating an already existing bucket does nothing')]
+    public function createBucketAlreadyCreated(): void
     {
         $this->s3->createBucket('test-bucket');
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
@@ -153,10 +143,9 @@ class S3Test extends TestCase
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
     }
 
-    /**
-     * @test création d'un bucket déjà créé par défault -> ne fait rien
-     */
-    public function testCreateBucketAlreadyCreatedDefault(): void
+    #[Test]
+    #[TestDox('Creating an already existing default bucket does nothing')]
+    public function createBucketAlreadyCreatedDefault(): void
     {
         $this->s3->createBucket();
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
@@ -165,40 +154,36 @@ class S3Test extends TestCase
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
     }
 
-    /**
-     * @test suppression d'un bucket d'un mauvais nom -> S3Exception
-     */
-    public function testDeleteBucketWrongName(): void
+    #[Test]
+    #[TestDox('Deleting a bucket with wrong name throws S3Exception')]
+    public function deleteBucketWrongName(): void
     {
         $this->expectException(S3Exception::class);
 
         $this->s3->deleteBucket('wr°ng-buck€t');
     }
 
-    /**
-     * @test suppression d'un bucket n'existant pas -> on ne fait rien
-     */
-    public function testDeleteBucketNoBucket(): void
+    #[Test]
+    #[TestDox('Deleting a non-existing bucket does nothing')]
+    public function deleteBucketNoBucket(): void
     {
         $this->s3->deleteBucket('test-bucket');
 
         $this->assertFalse($this->s3->doesBucketExist('test-bucket'));
     }
 
-    /**
-     * @test suppression d'un bucket n'existant pas -> on ne fait rien
-     */
-    public function testDeleteBucketNoBucketDefault(): void
+    #[Test]
+    #[TestDox('Deleting a non-existing default bucket does nothing')]
+    public function deleteBucketNoBucketDefault(): void
     {
         $this->s3->deleteBucket();
 
         $this->assertFalse($this->s3->doesBucketExist());
     }
 
-    /**
-     * @test suppression d'un bucket vide -> OK
-     */
-    public function testDeleteBucketPresentEmpty(): void
+    #[Test]
+    #[TestDox('Deleting an empty bucket succeeds')]
+    public function deleteBucketPresentEmpty(): void
     {
         $this->s3->createBucket('test-bucket');
         $this->assertTrue($this->s3->doesBucketExist('test-bucket'));
@@ -207,10 +192,9 @@ class S3Test extends TestCase
         $this->assertFalse($this->s3->doesBucketExist('test-bucket'));
     }
 
-    /**
-     * @test ajout d'un object OK
-     */
-    public function testPutObjectOk(): void
+    #[Test]
+    #[TestDox('Adding an object succeeds')]
+    public function putObjectOk(): void
     {
         $this->s3->createBucket('test-bucket');
         $this->s3->putObject('test-text', 'key.txt', 'text/plain', 'test-bucket');
@@ -221,10 +205,9 @@ class S3Test extends TestCase
         $this->assertSame('test-text', $this->s3->getObject('key.txt', 'test-bucket')->get('Body')->getContents());
     }
 
-    /**
-     * @test ajout d'un object du bucket par défault OK
-     */
-    public function testPutObjectDefaultOk(): void
+    #[Test]
+    #[TestDox('Adding an object to default bucket succeeds')]
+    public function putObjectDefaultOk(): void
     {
         $this->s3->createBucket();
         $this->s3->putObject('test-text', 'key.txt', 'text/plain');
@@ -235,20 +218,18 @@ class S3Test extends TestCase
         $this->assertSame('test-text', $this->s3->getObject('key.txt')->get('Body')->getContents());
     }
 
-    /**
-     * @test ajout d'un object sur un bucket n'existant pas
-     */
-    public function testPutObjectNonBucket(): void
+    #[Test]
+    #[TestDox('Adding an object to non-existing bucket fails')]
+    public function putObjectNonBucket(): void
     {
         $this->expectException(S3Exception::class);
 
         $this->s3->putObject('test', 'keyName.txt', 'text/plain', 'test-bucket');
     }
 
-    /**
-     * @test delete d'un object OK
-     */
-    public function testDeleteObjectOk(): void
+    #[Test]
+    #[TestDox('Deleting an object succeeds')]
+    public function deleteObjectOk(): void
     {
         $this->s3->createBucket('test-bucket');
         $this->s3->putObject('test-text', 'key.txt', 'text/plain', 'test-bucket');
@@ -260,11 +241,9 @@ class S3Test extends TestCase
         $this->assertFalse($this->s3->doesObjectExist('key.txt', 'test-bucket'));
     }
 
-
-    /**
-     * @test delete d'un object d'un bucket par défaut OK
-     */
-    public function testDeleteObjectDefaultOk(): void
+    #[Test]
+    #[TestDox('Deleting an object from default bucket succeeds')]
+    public function deleteObjectDefaultOk(): void
     {
         $this->s3->createBucket();
         $this->s3->putObject('test-text', 'key.txt', 'text/plain');
@@ -276,10 +255,9 @@ class S3Test extends TestCase
         $this->assertFalse($this->s3->doesObjectExist('key.txt'));
     }
 
-    /**
-     * @test delete d'un object n'existant pas -> retourne false
-     */
-    public function testDeleteObjectDoesNotExist(): void
+    #[Test]
+    #[TestDox('Deleting a non-existing object returns false')]
+    public function deleteObjectDoesNotExist(): void
     {
         $this->assertFalse($this->s3->deleteObject('key.txt', 'test-bucket'));
 
@@ -288,10 +266,9 @@ class S3Test extends TestCase
         $this->assertFalse($this->s3->deleteObject('key2.txt', 'test-bucket'));
     }
 
-    /**
-     * @test delete d'un object n'existant pas -> retourne false
-     */
-    public function testDeleteObjectDoesNotExistDefault(): void
+    #[Test]
+    #[TestDox('Deleting a non-existing object from default bucket returns false')]
+    public function deleteObjectDoesNotExistDefault(): void
     {
         $this->assertFalse($this->s3->deleteObject('key.txt'));
 
@@ -300,30 +277,27 @@ class S3Test extends TestCase
         $this->assertFalse($this->s3->deleteObject('key2.txt'));
     }
 
-    /**
-     * @test get d'un object où le bucket n'existe pas
-     */
-    public function testGetObjectNoBucket(): void
+    #[Test]
+    #[TestDox('Getting an object from non-existing bucket fails')]
+    public function getObjectNoBucket(): void
     {
         $this->expectException(S3Exception::class);
 
         $this->s3->getObject('key', 'test-bucket');
     }
 
-    /**
-     * @test get d'un object où le bucket n'existe pas
-     */
-    public function testGetObjectNoBucketDefault(): void
+    #[Test]
+    #[TestDox('Getting an object from non-existing default bucket fails')]
+    public function getObjectNoBucketDefault(): void
     {
         $this->expectException(S3Exception::class);
 
         $this->s3->getObject('key');
     }
 
-    /**
-     * @test get d'un object où l'object n'existe pas
-     */
-    public function testGetObjectNoKey(): void
+    #[Test]
+    #[TestDox('Getting a non-existing object fails')]
+    public function getObjectNoKey(): void
     {
         $this->s3->createBucket('test-bucket');
 
@@ -332,10 +306,9 @@ class S3Test extends TestCase
         $this->s3->getObject('key', 'test-bucket');
     }
 
-    /**
-     * @test get d'un object où l'object n'existe pas
-     */
-    public function testGetObjectNoKeyDefault(): void
+    #[Test]
+    #[TestDox('Getting a non-existing object from default bucket fails')]
+    public function getObjectNoKeyDefault(): void
     {
         $this->s3->createBucket();
 
@@ -344,10 +317,9 @@ class S3Test extends TestCase
         $this->s3->getObject('key');
     }
 
-    /**
-     * @test putFile d'un fichier non existant -> exception
-     */
-    public function testPutFileDoesNotExist(): void
+    #[Test]
+    #[TestDox('Putting a non-existing file throws exception')]
+    public function putFileDoesNotExist(): void
     {
         $this->s3->createBucket();
 
@@ -356,10 +328,9 @@ class S3Test extends TestCase
         $this->s3->putFile('file.txt', 'key.txt', 'text/plain');
     }
 
-    /**
-     * @test putFile d'un fichier présent -> OK
-     */
-    public function testPutFileOk(): void
+    #[Test]
+    #[TestDox('Putting an existing file succeeds')]
+    public function putFileOk(): void
     {
         $this->s3->createBucket();
 
@@ -369,10 +340,9 @@ class S3Test extends TestCase
         $this->assertSame('ceci est le contenu du fichier.', $this->s3->getObjectContent('test.txt'));
     }
 
-    /**
-     * @test ::getObjects()
-     */
-    public function testGetObjects(): void
+    #[Test]
+    #[TestDox('::getObjects()')]
+    public function getObjects(): void
     {
         $this->assertSame([], $this->s3->getObjects());
 
@@ -386,10 +356,9 @@ class S3Test extends TestCase
         $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->getObjects());
     }
 
-    /**
-     * @test ::getObjects() avec le bucketName par défaut
-     */
-    public function testGetObjectsDefault(): void
+    #[Test]
+    #[TestDox('::getObjects() with default bucket name')]
+    public function getObjectsDefault(): void
     {
         $this->assertSame([], $this->s3->setBucketName('test-bucket')->getObjects());
 
@@ -403,10 +372,9 @@ class S3Test extends TestCase
         $this->assertSame(['test-bucket' => ['keyname.txt', 'keyname2.txt']], $this->s3->getObjects());
     }
 
-    /**
-     * @test ::putDirectory() d'un dossier non existant
-     */
-    public function testPutDirectoryNotDirectory(): void
+    #[Test]
+    #[TestDox('::putDirectory() with non-existing directory')]
+    public function putDirectoryNotDirectory(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('/not/a/directory is not readable');
@@ -414,10 +382,9 @@ class S3Test extends TestCase
         $this->s3->putDirectory('/not/a/directory');
     }
 
-    /**
-     * @test ::putDirectory d'un dossier avec un fichier
-     */
-    public function testPutDirectoryOneFile(): void
+    #[Test]
+    #[TestDox('::putDirectory with a single file')]
+    public function putDirectoryOneFile(): void
     {
         $this->s3->createBucket();
 
@@ -430,10 +397,9 @@ class S3Test extends TestCase
         $this->s3->addObjectKey('test-bucket', 'directory/test.txt');
     }
 
-    /**
-     * @test ::putDirectory de plusieurs dossiers
-     */
-    public function testPutDirectoryMultipleDirectoriesPrefix(): void
+    #[Test]
+    #[TestDox('::putDirectory with multiple directories and prefix')]
+    public function putDirectoryMultipleDirectoriesPrefix(): void
     {
         $this->s3->createBucket();
 
@@ -449,10 +415,9 @@ class S3Test extends TestCase
         $this->s3->addObjectKey('test-bucket', 'directories/directory2/test2.txt');
     }
 
-    /**
-     * @test ::putDirectory de plusieurs dossiers sans préfix
-     */
-    public function testPutDirectoryMultipleDirectoriesNoPrefix(): void
+    #[Test]
+    #[TestDox('::putDirectory with multiple directories without prefix')]
+    public function putDirectoryMultipleDirectoriesNoPrefix(): void
     {
         $this->s3->createBucket();
 
