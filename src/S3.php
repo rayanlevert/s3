@@ -15,11 +15,6 @@ class S3
     protected \Aws\S3\S3Client $client;
 
     /**
-     * Name of the single bucket if only one bucket must be handled by the instance
-     */
-    protected string $bucketName;
-
-    /**
      * @var array<string, string[]> Buckets and objects created
      */
     protected array $objects = [];
@@ -55,6 +50,7 @@ class S3
      * @param string $secret Secret Access Key
      * @param string $endpoint Base URI URL of the S3 endpoint
      * @param string $region AWS server region
+     * @param string $bucketName Name of the single bucket if only one bucket must be handled by the instance
      * @param bool|array $useAwsSharedConfigFiles Disables checking shared config files (defaut disables it)
      */
     public function __construct(
@@ -62,7 +58,7 @@ class S3
         string $secret,
         string $endpoint,
         string $region,
-        string $bucketName = '',
+        protected string $bucketName = '',
         bool|array $useAwsSharedConfigFiles = false
     ) {
         $this->client = new \Aws\S3\S3Client([
@@ -76,8 +72,6 @@ class S3
                 'secret' => $secret
             ]
         ]);
-
-        $this->bucketName = $bucketName;
     }
 
     /**
