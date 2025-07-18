@@ -12,8 +12,8 @@ class Client
      *
      * @throws Exception If the endpoint URL is invalid
      */
-    public function __construct(public readonly string $endpoint)
+    public function __construct(string $endpoint)
     {
-        $this->curl = new Curl($this->endpoint);
+        $this->curl = new Curl($endpoint);
     }
 }

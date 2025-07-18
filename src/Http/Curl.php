@@ -20,6 +20,9 @@ class Curl
     /** The endpoint to be requested */
     public string $endpoint = '';
 
+    /** Full URI (base URI + endpoint) */
+    public string $uri { get => $this->baseUri . $this->endpoint; }
+
     /**
      * @param string $baseUri The base URI of the S3 endpoint
      *

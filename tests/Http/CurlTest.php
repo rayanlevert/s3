@@ -27,4 +27,16 @@ class CurlTest extends TestCase
         $this->assertInstanceOf(Curl::class, $curl);
         $this->assertSame('http://localhost:9000/', $curl->baseUri);
     }
+
+    #[Test]
+    public function uri(): void
+    {
+        $curl = new Curl('http://localhost:9000');
+
+        $this->assertSame('http://localhost:9000/', $curl->uri);
+
+        $curl->endpoint = 'test';
+
+        $this->assertSame('http://localhost:9000/test', $curl->uri);
+    }
 }

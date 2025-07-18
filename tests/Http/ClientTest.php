@@ -27,7 +27,6 @@ class ClientTest extends TestCase
         $client = new Client('http://localhost:9000');
 
         $this->assertInstanceOf(Client::class, $client);
-        $this->assertSame('http://localhost:9000', $client->endpoint);
 
         $oCurl = new ReflectionProperty($client, 'curl');
 
