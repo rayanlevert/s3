@@ -12,7 +12,7 @@ use function curl_getinfo;
 use function is_string;
 
 /** Response from HTTP requests */
-class Response
+readonly class Response
 {
     /**
      * @param string $url The URL of the request
@@ -21,10 +21,10 @@ class Response
      * @param array $headers The headers of the response
      */
     public function __construct(
-        public readonly string $url,
-        public readonly string $body,
-        public readonly int $statusCode,
-        public readonly array $headers
+        public string $url,
+        public string $body,
+        public int $statusCode,
+        public array $headers
     ) {}
 
     /**
