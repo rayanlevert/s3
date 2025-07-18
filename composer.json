@@ -19,8 +19,7 @@
     ],
     "require": {
         "php": "8.4.*",
-        "ext-curl": "*",
-        "aws/aws-sdk-php": "^3.293"
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpmd/phpmd": "@stable",
