@@ -65,20 +65,18 @@ public function getObjects(): array;
 
 ## Development / Docker
 
-> Uses [MinIO](https://min.io/docs/minio/linux/index.html), open source object storage for local development (unit tests)
+> Uses [RustFS](https://github.com/rustfs/rustfs), open source object storage for local development (unit tests)
 
 1. Copy [.env.example](.env.example) to `.env`
 
-2. Start containers (`docker compose up -d`), which you can choose the PHP version, and one for MinIO
+2. Start containers (`docker compose up -d`), for PHP and one for MinIO
 
 3. Start `docker compose exec s3 bash` to access to the PHP
 
 4. Run `composer install` to retrieve **vendors**
 
-5. Go to http://localhost:9090 and connect by using username and password in [docker-compose.yml](docker-compose.yml) file
+5. Go to http://localhost:9000 and connect by using username and password (`rustfsadmin` by default)
 
 6. Go to  `Access Keys`, generate access and secret key and put them in `.env` file
 
-7. Go to `Configuration` and set a value in `Server Location` (`local-dev` for example) and in the `.env` file
-
-8. Restart containers updating  `.env` file and you are good to go !
+7. Restart containers updating  `.env` file and you are good to go !
