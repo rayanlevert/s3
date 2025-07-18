@@ -11,15 +11,15 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /** Creates a S3 instance from .env */
     protected function setUp(): void
     {
-        $accessKey  = $_ENV['MINIO_ACCESS_KEY'] ?? null;
-        $secret     = $_ENV['MINIO_SECRET'] ?? null;
-        $region     = $_ENV['MINIO_REGION'] ?? null;
+        $accessKey  = $_ENV['RUSTFS_ACCESS_KEY'] ?? null;
+        $secret     = $_ENV['RUSTFS_SECRET'] ?? null;
+        $region     = $_ENV['RUSTFS_REGION'] ?? null;
 
         if (!$accessKey || !$secret || !$region) {
-            throw new \LogicException('MINIO_ACCESS_KEY, MINIO_SECRET and MINIO_REGION must be set from .env');
+            throw new \LogicException('RUSTFS_ACCESS_KEY, RUSTFS_SECRET and RUSTFS_REGION must be set from .env');
         }
 
-        $this->s3 = new S3($accessKey, $secret, 'http://minio:9000', $region, 'test-bucket');
+        $this->s3 = new S3($accessKey, $secret, 'http://rustfs:9000', $region, 'test-bucket');
     }
 
     /** Deletes creates objects and/or buckets from tests after each test */
