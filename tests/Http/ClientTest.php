@@ -1,12 +1,12 @@
 <?php
 
-namespace RayanLevert\S3\Tests;
+namespace RayanLevert\S3\Tests\Http;
 
 use CurlHandle;
-use RayanLevert\S3\Exception;
+use RayanLevert\S3\Http\Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use RayanLevert\S3\Client;
+use RayanLevert\S3\Http\Client;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
 

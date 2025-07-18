@@ -1,6 +1,6 @@
 <?php
 
-namespace RayanLevert\S3;
+namespace RayanLevert\S3\Http;
 
 use CurlHandle;
 
@@ -8,7 +8,7 @@ use function curl_init;
 use function curl_setopt_array;
 use function filter_var;
 
-/** Client handling cURL requests */
+/** Client handling HTTP requests */
 class Client
 {
     private CurlHandle $curl;
