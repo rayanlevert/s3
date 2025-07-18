@@ -10,14 +10,10 @@ services:
     volumes:
       - .:/app
 
-  minio:
-    image: minio/minio
+  rustfs:
+    image: rustfs/rustfs:latest
     ports:
       - 9000:9000
       - 9090:9090
     volumes:
-      - ./docker/data/minio:/data
-    environment:
-      - MINIO_ROOT_USER=root-username
-      - MINIO_ROOT_PASSWORD=root-password
-    command: server --console-address ":9090" /data
+      - ./docker/data/rustfs:/data
